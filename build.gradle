@@ -39,6 +39,9 @@ dependencies {
     // MySQL 连接器的依赖，指定版本号
     implementation 'mysql:mysql-connector-java:8.0.31'
 
+    // Spring Boot Redis starter，包含 Spring Data Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     // Lombok 依赖，用于简化 Java 代码
     compileOnly 'org.projectlombok:lombok'
 
@@ -51,11 +54,23 @@ dependencies {
     // 测试相关的依赖
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    // 测试运行时依赖，用于 JUnit Platform 的启动
+    // JUnit Platform 启动器，确保在测试过程中运行 JUnit 5
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // 可选: 添加嵌入式 H2 数据库作为开发依赖
+    // 可选: 添加嵌入式 H2 数据库作为开发和测试依赖
     implementation 'com.h2database:h2'
+
+    // 日志依赖，使用 Logback
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
+
+    // 排除旧版本的 SLF4J 实现，以避免冲突
+    configurations.all {
+        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+        exclude group: 'ch.qos.logback', module: 'logback-core'
+    }
+
+    // 保证使用兼容的 SLF4J 版本
+    implementation 'org.slf4j:slf4j-api:2.0.13'
 }
 
 // 配置测试任务
