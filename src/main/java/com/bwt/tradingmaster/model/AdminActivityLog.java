@@ -1,8 +1,11 @@
 package com.bwt.tradingmaster.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;  // 需要导入 LocalDateTime
+import lombok.Data;
 
+import java.time.LocalDateTime;
+
+@Data
 @Entity
 @Table(name = "admin_activity_log")
 public class AdminActivityLog {
@@ -26,9 +29,12 @@ public class AdminActivityLog {
     @Column(name = "ip", length = 60, nullable = false)
     private String ip;
 
-    @Column(name = "created_time", columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdTime = LocalDateTime.now();
+    @Column(name = "created_time", nullable = false)
+    private LocalDateTime createdTime;
 
-    // Getters and setters
-    // Constructor, etc.
+    // 可以使用一个构造方法来设置 createdTime 的默认值
+    @PrePersist
+    protected void onCreate() {
+        createdTime = LocalDateTime.now();
+    }
 }

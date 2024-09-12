@@ -1,80 +1,55 @@
-// 配置 Gradle 插件
 plugins {
-    // 应用 Java 插件，支持 Java 项目的编译、测试和打包
     id 'java'
-
-    // 应用 Spring Boot 插件，简化 Spring Boot 项目的创建和管理
     id 'org.springframework.boot' version '3.3.2'
-
-    // 应用 Spring 依赖管理插件，简化依赖版本的管理
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
-// 配置项目的基本信息
-group = 'com.bwt'  // 设置项目的组名
-version = '0.0.1-SNAPSHOT'  // 设置项目的版本号
+group = 'com.bwt'
+version = '0.0.1-SNAPSHOT'
 
-// 配置 Java 版本
 java {
     toolchain {
-        // 指定使用 Java 17 版本
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
-// 配置项目的依赖仓库
 repositories {
-    // 使用 Maven Central 作为依赖库的源
-    mavenCentral()
+    mavenCentral() // 确保这里包含了 mavenCentral 仓库
 }
 
-// 配置项目的依赖项
 dependencies {
-    // Spring Boot 的 JPA starter，包含 Spring Data JPA 和 Hibernate
+    // Spring Boot starters
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // Spring Boot 的 Web starter，包含 Spring MVC 和 Tomcat
     implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    // MySQL 连接器的依赖，指定版本号
-    implementation 'mysql:mysql-connector-java:8.0.31'
-
-    // Spring Boot Redis starter，包含 Spring Data Redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security 依赖
 
-    // Lombok 依赖，用于简化 Java 代码
+    // MySQL 驱动
+    implementation 'mysql:mysql-connector-java:8.0.33' // 使用稳定版本
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
-
-    // Lombok 注解处理器
     annotationProcessor 'org.projectlombok:lombok'
 
-    // Spring Boot DevTools，用于开发时的热重载和快速重启
+    // 日志依赖
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
+    implementation 'org.slf4j:slf4j-api:2.0.13'
+
+    // 开发工具
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-    // 测试相关的依赖
+    // 测试依赖
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    // JUnit Platform 启动器，确保在测试过程中运行 JUnit 5
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // 可选: 添加嵌入式 H2 数据库作为开发和测试依赖
+    // H2 数据库测试依赖 (如果需要使用 H2 测试数据库)
     implementation 'com.h2database:h2'
-
-    // 日志依赖，使用 Logback
-    implementation 'ch.qos.logback:logback-classic:1.2.11'
-
-    // 排除旧版本的 SLF4J 实现，以避免冲突
-    configurations.all {
-        exclude group: 'org.slf4j', module: 'slf4j-log4j12'
-        exclude group: 'ch.qos.logback', module: 'logback-core'
-    }
-
-    // 保证使用兼容的 SLF4J 版本
-    implementation 'org.slf4j:slf4j-api:2.0.13'
 }
 
-// 配置测试任务
 tasks.named('test') {
-    // 使用 JUnit Platform 进行测试
     useJUnitPlatform()
+}
+
+// 防止依赖冲突，排除旧版本的 SLF4J 依赖
+configurations.all {
+    exclude group: 'org.slf4j', module: 'slf4j-log4j12'
 }
